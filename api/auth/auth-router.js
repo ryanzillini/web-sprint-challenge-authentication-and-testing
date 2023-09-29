@@ -40,8 +40,14 @@ router.post("/register", validateNewUser, async (req, res, next) => {
   */
 });
 
-router.post("/login", (req, res) => {
-  res.end("implement login, please!");
+router.post("/login", validateUser, (req, res, next) => {
+  if (bcrypt.compareSync(req.body.password, req.user.password)) {
+    const token = buildToken(req.user);
+    res.status(200).json({ message: `welcome, ${req.user.username}`, token });
+  } else {
+    next({ status: 400, message: "invalid credentials" });
+  }
+
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -66,11 +72,6 @@ router.post("/login", (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
-
-// router.get("/users", (req, res, next) => {
-//   const user = User.getBy({ username: req.body.username });
-//   console.log(user);
-// });
 
 function buildToken(user) {
   const payload = {
