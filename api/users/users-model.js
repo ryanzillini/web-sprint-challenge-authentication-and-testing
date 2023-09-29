@@ -4,8 +4,9 @@ function getById(id) {
   return db("users").where("id", id).first();
 }
 
-function getBy(filter) {
-  return db("users").where(filter);
+async function getBy(filter) {
+  const user = await db("users").where(filter);
+  return user;
 }
 
 const add = async (user) => {
