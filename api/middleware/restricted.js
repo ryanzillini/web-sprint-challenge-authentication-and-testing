@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
     // eslint-disable-next-line no-unused-vars
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
-        next({ status: 403, message: "token invalid" });
+        res.status(403).json({ message: "token invalid" });
       } else {
         next();
       }

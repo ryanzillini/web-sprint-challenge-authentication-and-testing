@@ -45,7 +45,10 @@ router.post("/login", validateUser, async (req, res, next) => {
   try {
     const [user] = await User.getBy({ username });
     const token = buildToken(user);
-    res.json({ message: `welcome, ${username}`, token });
+    res.json({
+      message: `welcome, ${username}`,
+      token,
+    });
   } catch (err) {
     next(err);
   }
