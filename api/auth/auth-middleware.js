@@ -1,4 +1,5 @@
 const User = require("../users/users-model");
+const bcrypt = require("bcryptjs");
 
 const validateNewUser = async (req, res, next) => {
   const { username, password } = req.body;
@@ -23,10 +24,9 @@ const validateUser = async (req, res, next) => {
       next({ status: 402, message: "username and password required" });
     } else {
       const [user] = await User.getBy({ username });
-      if (user.length === 0) {
+      if (!user || !bcrypt.compareSync(password, user.password)) {
         next({ status: 422, message: "invalid credentials" });
       } else {
-        req.user = user;
         next();
       }
     }

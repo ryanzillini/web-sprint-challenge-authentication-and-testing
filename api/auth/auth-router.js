@@ -40,12 +40,14 @@ router.post("/register", validateNewUser, async (req, res, next) => {
   */
 });
 
-router.post("/login", validateUser, (req, res, next) => {
-  if (bcrypt.compareSync(req.body.password, req.user.password)) {
-    const token = buildToken(req.user);
-    res.status(200).json({ message: `welcome, ${req.user.username}`, token });
-  } else {
-    next({ status: 400, message: "invalid credentials" });
+router.post("/login", validateUser, async (req, res, next) => {
+  const { username } = req.body;
+  try {
+    const [user] = await User.getBy({ username });
+    const token = buildToken(user);
+    res.json({ message: `welcome, ${username}`, token });
+  } catch (err) {
+    next(err);
   }
 
   /*
@@ -75,7 +77,7 @@ router.post("/login", validateUser, (req, res, next) => {
 
 function buildToken(user) {
   const payload = {
-    subject: user.user_id,
+    subject: user.id,
     username: user.username,
   };
   const options = {
