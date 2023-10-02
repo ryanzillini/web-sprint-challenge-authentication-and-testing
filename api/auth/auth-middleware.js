@@ -23,7 +23,7 @@ const validateNewUser = async (req, res, next) => {
 const validateUser = async (req, res, next) => {
   const { username, password } = req.body;
   try {
-    if (username.trim().length < 1 || password.trim().length < 1) {
+    if (username === undefined || password === undefined) {
       next({ status: 402, message: "username and password required" });
     } else {
       const [user] = await User.getBy({ username });
