@@ -8,11 +8,12 @@ const User = require("../users/users-model");
 router.post("/register", validateNewUser, async (req, res, next) => {
   const { username, password } = req.body;
   const hash = bcrypt.hashSync(password, 8);
-  User.add({ username, password: hash })
-    .then((newUser) => {
-      res.status(201).json(newUser);
-    })
-    .catch(next);
+  try {
+    const newUser = await User.add({ username, password: hash });
+    res.status(201).json(newUser);
+  } catch (err) {
+    next(err);
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.

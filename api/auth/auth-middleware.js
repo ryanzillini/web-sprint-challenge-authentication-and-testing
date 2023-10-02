@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const validateNewUser = async (req, res, next) => {
   const { username, password } = req.body;
   try {
-    if (username.trim() === undefined || !password.trim() === undefined) {
+    if (username.trim().length < 1 || password.trim().length < 1) {
       next({ status: 402, message: "username and password required" });
     } else {
       const newUser = await User.getBy({ username });
@@ -20,7 +20,7 @@ const validateNewUser = async (req, res, next) => {
 const validateUser = async (req, res, next) => {
   const { username, password } = req.body;
   try {
-    if (!username.trim() || !password.trim()) {
+    if (username.trim().length < 1 || password.trim().length < 1) {
       next({ status: 402, message: "username and password required" });
     } else {
       const [user] = await User.getBy({ username });
