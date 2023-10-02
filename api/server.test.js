@@ -12,10 +12,6 @@ beforeEach(async () => {
   await db.seed.run();
 });
 
-afterAll(async () => {
-  await db.destroy();
-});
-
 test("[---] SANITY", () => {
   expect(true).toBe(true);
 });
